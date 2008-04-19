@@ -11,6 +11,8 @@ kisaragi = function() {
     this.date = new Array();
   };
   
+  var skin_name = '';
+  
   return {
     printCalendar: function(page, cal) {
       $(page).innerHTML = "";
@@ -72,7 +74,10 @@ kisaragi = function() {
       skin.render(kisaragi.getCalendar(new Date(year, month - 1 - 1), 0));
     },
     
-    importScript: function(filename) {
+    loadSkin: function(s) {
+      skinname = s;
+      $('css').href = './skin/' + skinname + '/style.css';
+      var jsname = './skin/' + skinname + '/skin.js';
       var scr = document.getElementsByTagName('script');
       if(scr.size > 0) {
         for(var i in scr) {
@@ -80,10 +85,14 @@ kisaragi = function() {
         }
       }
       var s = document.createElement('script');
-      s.src = filename;
+      s.src = jsname;
       s.type = 'text/javascript';
       s.charset = 'utf-8';
       document.body.appendChild(s);
+    },
+    
+    getSkinFolder: function() {
+      return './skin/' + skinname;
     }
   };
 }();
@@ -93,8 +102,10 @@ gadget = function() {
   return {
     pageLoad: function() {
       window.detachEvent('onload', gadget.pageLoad);
-      kisaragi.importScript('./skin/default/skin.js');
+      kisaragi.loadSkin('default');
+      
       skin.render(kisaragi.getCalendar(new Date(), 0));
+      //$('calendar').innerHTML = '<img src="skin/flat_black/month_1.png"/>';
     }
   };
 }();
