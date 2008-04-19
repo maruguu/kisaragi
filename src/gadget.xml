@@ -7,9 +7,9 @@
     <logo src="images/icon.png" />
   </author>
   <copyright>Copyright (c) 2008 maruguu</copyright>
-  <description>iCal形式のデータを利用できるカレンダーガジェット</description>
+  <description>Calendar gadget</description>
   <icons>
-    <icon width="64" height="64" src="images/icon.png" />
+    <icon width="256" height="256" src="images/icon.png" />
   </icons>
   <hosts>
     <host name="sidebar" >
