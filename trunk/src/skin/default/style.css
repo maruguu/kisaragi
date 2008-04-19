@@ -8,7 +8,7 @@
 
 body {
   width: 130px;
-  //height: 200px;
+  height: 100px;
   color: #000000;
   background: #000000 fixed no-repeat top left;
 }
@@ -32,7 +32,7 @@ table.calendar {
 td.curve {
   margin:0;
   padding:0px 0px;
-  background-color:#ffffcc; 
+  background-color:#ffffcc;
 }
 
 td.curve-corner {
