@@ -1,20 +1,21 @@
-* {
-  margin: 0;
-  padding: 0;
+﻿* {
   font-family: 'メイリオ';
   font-size: 7pt;
-
+  margin: 0;
+  padding: 0;
 }
 
 body {
   width: 130px;
-  height: 100px;
-  color: #000000;
-  background: #000000 fixed no-repeat top left;
+  height: 125px;
 }
 
 table.calendar {
   text-align: center;
+}
+
+#calendar {
+  margin: 5px 0px;
 }
 
 #today {
@@ -26,21 +27,5 @@ table.calendar {
   font-size: 15px;
   height: 50px;
   vertical-align: middle;
-}
-
-/* 角丸設定 */
-td.curve {
-  margin:0;
-  padding:0px 0px;
-  background-color:#ffffcc;
-}
-
-td.curve-corner {
-  margin:0;
-  padding:0px 0px;
-  font-size:1px;
-  width: 5px;
-  height: 5px;
-  background-color: transparent;
 }
 
