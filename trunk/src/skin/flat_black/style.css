@@ -1,0 +1,64 @@
+﻿* {
+  font-family: 'メイリオ';
+  font-size: 4pt;
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  width: 130px;
+  height: 82px;
+  background-color: #112233;
+}
+
+table {
+  text-align: right;
+}
+
+td {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.vertical_line_w {
+  background-color: transparent;
+  width: 130px;
+  height: 4px;
+}
+
+.vertical_line {
+  background-color: transparent;
+  width: 130px;
+  height: 2px;
+}
+
+.line {
+  background-color: transparent;
+  width: 1px;
+}
+
+.days {
+  width: 16px;
+}
+
+.day {
+  width: 16px;
+  background-color: transparent;
+}
+
+.hidden {
+  background-color: transparent;
+}
+
+#today {
+  color: #ffffff;
+  background-color: #883300;
+}
+
+#month {
+  font-size: 15px;
+  height: 50px;
+  vertical-align: middle;
+}
+

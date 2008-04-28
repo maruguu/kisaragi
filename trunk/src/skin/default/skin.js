@@ -5,8 +5,8 @@ skin = function() {
     },
     
     render: function(cal) {
-      var background = '<g:background src="./skin/default/bg.png" style="position:absolute; z-index:-1;"/><div id="calendar"></div>';
-      //background = background.replace(/%folder%/g, kisaragi.getSkinFolder());
+      var background = '<g:background src="%folder%/bg.png" style="position:absolute; z-index:-1;"/><div id="calendar"></div>';
+      background = background.replace(/%folder%/g, kisaragi.getSkinFolder());
       $('background').innerHTML = background;
       var template = '<table class="calendar"><tr><td>%year%</td><td>%d0%</td><td>%d1%</td><td>%d2%</td><td>%d3%</td><td>%d4%</td><td>%d5%</td><td>%d6%</td></tr><tr><td rowspan="6"><table><tr><td><div id="nextMonth" onclick="kisaragi.paintNextMonth(%year%, %month%)" onmouseover="skin.changeBGColor(\'nextMonth\', \'orange\')" onmouseout="skin.changeBGColor(\'nextMonth\', \'transparent\')">▲</div></td></tr><tr><td id="month">%month%</td></tr><tr><td><div id="prevMonth" onclick="kisaragi.paintPrevMonth(%year%, %month%)" onmouseover="skin.changeBGColor(\'prevMonth\', \'orange\')" onmouseout="skin.changeBGColor(\'prevMonth\', \'transparent\')">▼</div></td></tr></table></td><td>01</td><td>02</td><td>03</td><td>04</td><td>05</td><td>06</td><td>07</td></tr><tr><td>08</td><td>09</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr><tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr><tr><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr><tr><td>29</td><td>30</td><td>31</td><td>32</td><td>33</td><td>34</td><td>35</td></tr><tr><td>36</td><td>37</td><td>38</td><td>39</td><td>40</td><td>41</td><td>42</td></tr></table>';
       
