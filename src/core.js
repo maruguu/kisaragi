@@ -102,8 +102,9 @@ gadget = function() {
   return {
     pageLoad: function() {
       window.detachEvent('onload', gadget.pageLoad);
-      kisaragi.loadSkin('default');
+      kisaragi.loadSkin('flat_black');
       
+      //skin.render(kisaragi.getCalendar(new Date(), 0));
       skin.render(kisaragi.getCalendar(new Date(), 0));
       //$('calendar').innerHTML = '<img src="skin/flat_black/month_1.png"/>';
     }
