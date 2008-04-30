@@ -1,4 +1,4 @@
-kisaragi = function() {
+var kisaragi = function() {
   var leap = function(year){
     return year % 4 ? 0 : year % 100 ? 1 : year % 400 ? 0 : 1;
   };
@@ -11,9 +11,18 @@ kisaragi = function() {
     this.date = new Array();
   };
   
-  var skin_name = '';
+  var skinName; // current skin name
   
   return {
+    read_settings: function() {
+      skinName = System.Gadget.Settings.read('skinName');
+      if (!skinName) skinName = 'default';
+    },
+        
+    write_settings: function() {
+      System.Gadget.Settings.write('skinName', skinName);
+    },
+    
     printCalendar: function(page, cal) {
       $(page).innerHTML = "";
       $(page).innerHTML += "<h2> year " + cal.year + "</h2><br />";
@@ -75,9 +84,8 @@ kisaragi = function() {
     },
     
     loadSkin: function(s) {
-      skinname = s;
-      $('css').href = './skin/' + skinname + '/style.css';
-      var jsname = './skin/' + skinname + '/skin.js';
+      $('css').href = './skin/' + s + '/style.css';
+      var jsname = './skin/' + s + '/skin.js';
       var scr = document.getElementsByTagName('script');
       if(scr.size > 0) {
         for(var i in scr) {
@@ -91,24 +99,16 @@ kisaragi = function() {
       document.body.appendChild(s);
     },
     
+    setSkinName: function(s) {
+      skinName = s;
+    },
+    
+    getSkinName: function() {
+      return skinName;
+    },
+    
     getSkinFolder: function() {
-      return './skin/' + skinname;
+      return './skin/' + skinName;
     }
   };
 }();
-
-
-gadget = function() {
-  return {
-    pageLoad: function() {
-      window.detachEvent('onload', gadget.pageLoad);
-      kisaragi.loadSkin('flat_black');
-      
-      //skin.render(kisaragi.getCalendar(new Date(), 0));
-      skin.render(kisaragi.getCalendar(new Date(), 0));
-      //$('calendar').innerHTML = '<img src="skin/flat_black/month_1.png"/>';
-    }
-  };
-}();
-
-window.attachEvent('onload', gadget.pageLoad);
