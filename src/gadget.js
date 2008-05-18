@@ -86,22 +86,14 @@ var gadget = function() {
     }
   };
   
-  // ガジェットの設定
-  var check_ver;
-  var read_settings = function() {
-      check_ver = System.Gadget.Settings.read('check_ver');
-      if (!check_ver) check_ver = true;
-  };
-  
   return {
     settingsClosed: function(p_event) {
       if (p_event.closeAction == p_event.Action.commit) {
-        
-        read_settings();
         kisaragi.read_settings();
         kisaragi.loadSkin(kisaragi.getSkinName());
         
-        skin.render(kisaragi.getCalendar(new Date(), 0));
+        //skin.render(kisaragi.getCalendar(new Date(), 0));
+        kisaragi.render(kisaragi.getCalendar(new Date(), 0));
       }
     },
     
@@ -110,17 +102,18 @@ var gadget = function() {
       
       System.Gadget.settingsUI = 'settings.html';
       System.Gadget.onSettingsClosed = gadget.settingsClosed;
-      read_settings();
-      //if(check_ver) {
-        checkLatestVersion();
-      //}
       kisaragi.read_settings();
+      if(kisaragi.getVersionCheck()) {
+        checkLatestVersion();
+      }
+      
       kisaragi.loadSkin(kisaragi.getSkinName());
       
       //kisaragi.requestiCal('http://ical.mac.com/ical/Japanese32Holidays.ics', callback);
       //kisaragi.requestiCal('http://www.google.com/calendar/ical/japanese__ja%40holiday.calendar.google.com/public/basic.ics', callback);
       
-      skin.render(kisaragi.getCalendar(new Date(), 0));
+      //skin.render(kisaragi.getCalendar(new Date(), 0));
+      kisaragi.render(kisaragi.getCalendar(new Date(), 0));
     }
   };
 }();

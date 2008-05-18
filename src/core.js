@@ -11,18 +11,70 @@ var kisaragi = function() {
     this.date = new Array();
   };
   
-  var skinName; // current skin name
+  // render function
+  var lock = false;
+  var renderTimer = null;
+  var render_core = function(cal) {
+    if(renderTimer) {
+      clearTimeout(renderTimer);
+    }
+    
+    if(!lock) {
+      lock = true;
+      skin.render(cal);
+      lock = false;
+    } else {
+      renderTimer = setTimeout(function() { render_core(cal); }, 500);
+   }
+  };
+  
+  // settings variables
+  var skinName;   // current skin name
+  var checkVer;
+  var iCalUrl;
   
   return {
+    // setting functions (global)
     read_settings: function() {
       skinName = System.Gadget.Settings.read('skinName');
       if (!skinName) skinName = 'default';
-    },
-        
-    write_settings: function() {
-      System.Gadget.Settings.write('skinName', skinName);
+      iCalUrl = System.Gadget.Settings.read('iCalUrl');
+      if (!iCalUrl) iCalUrl = 'http://www.google.com/calendar/ical/japanese__ja%40holiday.calendar.google.com/public/basic.ics';
+      checkVer = System.Gadget.Settings.read('checkVer');
     },
     
+    write_settings: function() {
+      System.Gadget.Settings.write('skinName', skinName);
+      System.Gadget.Settings.write('iCalUrl', iCalUrl);
+      System.Gadget.Settings.write('checkVer', checkVer);
+    },
+    
+    setSkinName: function(s) {
+      skinName = s;
+    },
+    
+    getSkinName: function() {
+      return skinName;
+    },
+    
+    setiCalUrl: function(s) {
+      iCalUrl = s;
+    },
+    
+    getiCalUrl: function() {
+      return iCalUrl;
+    },
+    
+    setVersionCheck: function(s) {
+      checkVer = s;
+    },
+    
+    getVersionCheck: function() {
+      return checkVer;
+    },
+    
+    
+    // for debugging
     printCalendar: function(page, cal) {
       $(page).innerHTML = "";
       $(page).innerHTML += "<h2> year " + cal.year + "</h2><br />";
@@ -34,7 +86,7 @@ var kisaragi = function() {
       }
       $(page).innerHTML += "<br />";
     },
-     
+    
     getCalendar: function(time, startDay) {
       var tod = time || new Date;
       startDay = startDay || 0;
@@ -99,17 +151,10 @@ var kisaragi = function() {
       document.body.appendChild(s);
     },
     
-    setSkinName: function(s) {
-      skinName = s;
-    },
-    
-    getSkinName: function() {
-      return skinName;
-    },
-    
     getSkinFolder: function() {
       return './skin/' + skinName;
     },
+    
     
     requestiCal: function(url, callback) {
   
@@ -138,6 +183,10 @@ var kisaragi = function() {
        };
          $('calendar').innerHTML = 'start';
        xhr.send('');
+     },
+     
+     render: function(cal) {
+       renderTimer = setTimeout(function() { render_core(cal); }, 500);
      }
    };
 }();

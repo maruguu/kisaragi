@@ -6,7 +6,7 @@ var settings = function(){
   var pages = new Array();
   pages[0] = '<form><select id="skin_list" size="10" name="skin_list"><option value="default">default</option><option value="default_r">default_r</option><option value="default_g">default_g</option><option value="default_b">default_b</option><option value="flat_black">flat_black</option></select></form>';
   pages[1] = '';
-  pages[2] = '<center><img src="images/icon.png" width="64px" height="64px"/><br /><b>kisaragi<div id="version">alpha</div></b><br /><a href="http://code.google.com/p/kisaragi/" target="_blank">http://code.google.com/p/kisaragi/</a><br /></center>';
+  pages[2] = '<center><img src="images/icon.png" width="64px" height="64px"/><br /><b>kisaragi <div id="version"></div></b><br /><a href="http://code.google.com/p/kisaragi/" target="_blank">http://code.google.com/p/kisaragi/</a><br /><input type="checkbox" name="check_ver" value="" />起動時に最新版を確認する</center></center>';
   
   var current_page = 0;
   return {
@@ -36,6 +36,9 @@ var settings = function(){
             kisaragi.setSkinName(node.innerHTML);
           }
         });
+      } else if(page == 1) {
+      } else if(page == 2) {
+        kisaragi.setVersionCheck($('check_ver').checked);
       }
     },
     
@@ -72,7 +75,8 @@ var settings = function(){
         });
       } else if(page == 1) {
       } else if(page == 2) {
-      } else if(page == 3) {
+        $('check_ver').checked = kisaragi.getVersionCheck();
+        $('version').innerHTML = 'Version ' + System.Gadget.version;
       }
       current_page = page;
     }
