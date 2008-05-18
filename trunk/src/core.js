@@ -109,6 +109,35 @@ var kisaragi = function() {
     
     getSkinFolder: function() {
       return './skin/' + skinName;
-    }
-  };
+    },
+    
+    requestiCal: function(url, callback) {
+  
+       var xhr = new XMLHttpRequest();
+       xhr.open('GET', url, true)
+       xhr.onreadystatechange = function(istimeout) {
+         if(xhr && xhr.readyState == 4) {
+           if(xhr.status == 200) {
+             var myCalReader = new iCalReader(); 
+             myCalReader.prepareData(xhr.responseText);
+             myCalReader.parse();
+             myCalReader.sort();
+             
+             callback(myCalReader.getCalendar());
+             
+           } else {
+             $('calendar').innerHTML = xhr.status + ':' + xhr.statusText;
+           }
+         } else if(xhr && istimeout == 'timeout') {
+           $('calendar').innerHTML = 'timeout';
+         } else if(xhr && xhr.readyState == 3) {
+           $('calendar').innerHTML = 'hoge';
+         } else {
+           $('calendar').innerHTML = 'hogehoge';
+         }
+       };
+         $('calendar').innerHTML = 'start';
+       xhr.send('');
+     }
+   };
 }();
