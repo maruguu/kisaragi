@@ -9,6 +9,7 @@ var kisaragi = function() {
     this.tod = 1;
     this.startDay = 0;
     this.date = new Array();
+    this.holidays = null;
   };
   
   // render function
@@ -31,6 +32,7 @@ var kisaragi = function() {
   // settings variables
   var skinName;   // current skin name
   var checkVer;
+  var checkHoliday;
   var iCalUrl;
   
   return {
@@ -38,6 +40,7 @@ var kisaragi = function() {
     read_settings: function() {
       skinName = System.Gadget.Settings.read('skinName');
       if (!skinName) skinName = 'default';
+      checkHoliday = System.Gadget.Settings.read('checkHoliday');
       iCalUrl = System.Gadget.Settings.read('iCalUrl');
       if (!iCalUrl) iCalUrl = 'http://www.google.com/calendar/ical/japanese__ja%40holiday.calendar.google.com/public/basic.ics';
       checkVer = System.Gadget.Settings.read('checkVer');
@@ -45,6 +48,7 @@ var kisaragi = function() {
     
     write_settings: function() {
       System.Gadget.Settings.write('skinName', skinName);
+      System.Gadget.Settings.write('checkHoliday', checkHoliday);
       System.Gadget.Settings.write('iCalUrl', iCalUrl);
       System.Gadget.Settings.write('checkVer', checkVer);
     },
@@ -63,6 +67,14 @@ var kisaragi = function() {
     
     getiCalUrl: function() {
       return iCalUrl;
+    },
+    
+    setHolidayCheck: function(s) {
+      checkHoliday = s;
+    },
+    
+    getHolidayCheck: function() {
+      return checkHoliday;
     },
     
     setVersionCheck: function(s) {
@@ -127,12 +139,20 @@ var kisaragi = function() {
     
     paintNextMonth: function(year, month) {
       if((year == 9999) && (month == 12)) return;
-      skin.render(kisaragi.getCalendar(new Date(year, month - 1 + 1), 0));
+      //skin.render(kisaragi.getCalendar(new Date(year, month - 1 + 1), 0));
+      kisaragi.render(kisaragi.getCalendar(new Date(year, month - 1 + 1), 0));
+      if(kisaragi.getHolidayCheck()) {
+        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays, new Date(year, month - 1 + 1));
+      }
     },
     
     paintPrevMonth: function(year, month) {
       if((year == 100) && (month == 1)) return;
-      skin.render(kisaragi.getCalendar(new Date(year, month - 1 - 1), 0));
+      //skin.render(kisaragi.getCalendar(new Date(year, month - 1 - 1), 0));
+      kisaragi.render(kisaragi.getCalendar(new Date(year, month - 1 - 1), 0));
+      if(kisaragi.getHolidayCheck()) {
+        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays, new Date(year, month - 1 - 1));
+      }
     },
     
     loadSkin: function(s) {
@@ -149,6 +169,7 @@ var kisaragi = function() {
       s.type = 'text/javascript';
       s.charset = 'utf-8';
       document.body.appendChild(s);
+      $('calendar').innerHTML = '';
     },
     
     getSkinFolder: function() {
@@ -156,37 +177,64 @@ var kisaragi = function() {
     },
     
     
-    requestiCal: function(url, callback) {
+    requestiCal: function(url, callback, option) {
   
-       var xhr = new XMLHttpRequest();
-       xhr.open('GET', url, true)
-       xhr.onreadystatechange = function(istimeout) {
-         if(xhr && xhr.readyState == 4) {
-           if(xhr.status == 200) {
-             var myCalReader = new iCalReader(); 
-             myCalReader.prepareData(xhr.responseText);
-             myCalReader.parse();
-             myCalReader.sort();
-             
-             callback(myCalReader.getCalendar());
-             
-           } else {
-             $('calendar').innerHTML = xhr.status + ':' + xhr.statusText;
-           }
-         } else if(xhr && istimeout == 'timeout') {
-           $('calendar').innerHTML = 'timeout';
-         } else if(xhr && xhr.readyState == 3) {
-           $('calendar').innerHTML = 'hoge';
-         } else {
-           $('calendar').innerHTML = 'hogehoge';
-         }
-       };
-         $('calendar').innerHTML = 'start';
-       xhr.send('');
-     },
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true)
+      xhr.onreadystatechange = function(istimeout) {
+        if(xhr && xhr.readyState == 4) {
+          if(xhr.status == 200) {
+            var myCalReader = new iCalReader(); 
+            myCalReader.prepareData(xhr.responseText);
+            myCalReader.parse();
+            myCalReader.sort();
+            
+            callback(myCalReader.getCalendar(), option);
+            
+          } else {
+          }
+        } else if(xhr && istimeout == 'timeout') {
+        } else if(xhr && xhr.readyState == 3) {
+        } else {
+        }
+      };
+      xhr.send('');
+    },
      
-     render: function(cal) {
-       renderTimer = setTimeout(function() { render_core(cal); }, 500);
-     }
-   };
+    setHolidays: function(calendar, req_date) {
+      req_date = req_date || new Date();
+      var cal = kisaragi.getCalendar(req_date, 0);
+      cal.holidays = new Array();
+      
+      var y = cal.year;
+      var m = cal.month - 1;
+      var date = new Date(y, m, 1, 0, 0, 0);
+      
+      var prevMonthFlag = true;
+      var nextMonthFlag = false;
+      for(var i = 0; i < cal.date.size(); i++) {
+        if(cal.date[i] == 1) {
+          prevMonthFlag = false;
+        } else if(!prevMonthFlag && (cal.date[i] == 1)){
+          nextMonthFlag = true;
+        }
+        if(!(prevMonthFlag || nextMonthFlag)) {
+          var result = iCalUtility.isHoliday(calendar, date);
+          cal.holidays.push(result);
+          date.setDate(date.getDate() + 1);
+        } else {
+          cal.holidays.push(false);
+        }
+      }
+      
+      kisaragi.render(cal);
+    }, 
+    
+    render: function(cal) {
+      if(renderTimer) {
+        clearTimeout(renderTimer);
+      }
+      renderTimer = setTimeout(function() { render_core(cal); }, 500);
+    }
+  };
 }();

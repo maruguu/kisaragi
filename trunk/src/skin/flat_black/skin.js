@@ -46,6 +46,8 @@ skin = function() {
           color = 'h';
         } else if((cal.date[i] == d) && (cal.month == m) && (cal.year == y)) {
           today = true;
+        } else if((cal.holidays != null) && cal.holidays[i]) {
+          color = 'r';
         } else if(i % 7 == sunday) {
           color = 'r';
         } else if(i % 7 == saturday) {

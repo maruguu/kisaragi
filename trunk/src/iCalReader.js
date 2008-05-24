@@ -9,7 +9,7 @@
     Copyright (C) 2007 - Per Kristian Nordnes.
     All rights reserved.        
     
-    The parsing algorithm in iCalendar.parse() is inspired by a PHP-script by Roman O転ana.
+    The parsing algorithm in iCalendar.parse() is inspired by a PHP-script by Roman O軎�ana.
     
     Changelog:
       1.0 - Initial release (aug. 2007).
@@ -322,21 +322,22 @@ function iCalReader() {
           var calDate = new Date();
 
           var months = (dArr[2][0] == '0') ? dArr[2][1] : dArr[2];
-          months = parseInt(months)-1;
+          
+          months = parseInt(months, 10)-1;
           var days = (dArr[3][0] == '0') ? dArr[3][1] : dArr[3];
-          days = parseInt(days);
+          days = parseInt(days, 10);
           
           var hours = (dArr[4][0] == '0') ? dArr[4][1] : dArr[4];
           hours = hours == '' ? '0' : hours;
-          hours = parseInt(hours);
+          hours = parseInt(hours, 10);
           
           var minutes = (dArr[5][0] == '0') ? dArr[5][1] : dArr[5];
           minutes = minutes == '' ? '0' : minutes;
-          minutes = parseInt(minutes);
+          minutes = parseInt(minutes, 10);
           
           var seconds = (dArr[6][0] == '0') ? dArr[6][1] : dArr[6];
           seconds = seconds == '' ? '0' : seconds;
-          seconds = parseInt(seconds);
+          seconds = parseInt(seconds, 10);
           
           calDate.setFullYear(dArr[1]);
           calDate.setMonth(months);
@@ -344,7 +345,6 @@ function iCalReader() {
           calDate.setHours(hours);
           calDate.setMinutes(minutes);
           calDate.setSeconds(seconds);
-
         } catch(e) {
           throw('invalidDateException');
         }
