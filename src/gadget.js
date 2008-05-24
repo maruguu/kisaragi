@@ -1,49 +1,4 @@
 var gadget = function() {
-  
-  var callback = function(calendar) {
-    /*var eventInfo = '';
-    var events = calendar.getEvents();
-    for(var i = 0; i < calendar.getNrOfEvents(); i++) {
-      var event = calendar.getEventAtIndex(i); 
-      
-      var startDate = event.getStartDate();
-      var endDate = event.getEndDate();
-      
-      var timeZone = event.getTimeZone();
-      var rules = event.getRuleProperties();
-      
-      var eventPropertyNames = event.getPropertyNames();
-      for(var n = 0; n < eventPropertyNames.length; n++) {
-        var propertyName = eventPropertyNames[n];
-        var propertyValue = event.getProperty(propertyName);
-      }
-      
-      if(rules.size > 0) {
-        var freq = rules.getProperty('FREQ');
-        
-        
-        eventInfo += i + ' : ' + startDate + ' : ' + freq + ':' + event.getProperty('SUMMARY') + '<br />';
-      } else {
-        
-        eventInfo += i + ' : ' + startDate + ' : ' + event.getProperty('SUMMARY') + '<br />';
-      }
-    }
-    $('calendar').innerHTML += eventInfo + '<br />';
-    */
-    
-    // テスト用。2008年5月の各曜日について休日かどうかを求める
-    var tod = new Date;
-    var y = tod.getFullYear();
-    var m = tod.getMonth();
-    var date = new Date(y, m, 1, 0, 0, 0);
-    
-    for(var i = 0; i < 31; i++) {
-      var result = iCalUtility.isHoliday(calendar, date);
-      $('calendar').innerHTML += date + ' : ' + result + '<br />';
-      date.setDate(date.getDate() + 1);
-    }
-  };
-  
   // Check the latest version of gadget
   var checkLatestVersion = function() {
     var url = "http://code.google.com/p/kisaragi/wiki/ChangeLog"; // must be changed
@@ -94,6 +49,9 @@ var gadget = function() {
         
         //skin.render(kisaragi.getCalendar(new Date(), 0));
         kisaragi.render(kisaragi.getCalendar(new Date(), 0));
+        if(kisaragi.getHolidayCheck()) {
+          kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
+        }
       }
     },
     
@@ -108,12 +66,10 @@ var gadget = function() {
       }
       
       kisaragi.loadSkin(kisaragi.getSkinName());
-      
-      //kisaragi.requestiCal('http://ical.mac.com/ical/Japanese32Holidays.ics', callback);
-      //kisaragi.requestiCal('http://www.google.com/calendar/ical/japanese__ja%40holiday.calendar.google.com/public/basic.ics', callback);
-      
-      //skin.render(kisaragi.getCalendar(new Date(), 0));
       kisaragi.render(kisaragi.getCalendar(new Date(), 0));
+      if(kisaragi.getHolidayCheck()) {
+        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
+      }
     }
   };
 }();

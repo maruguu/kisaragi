@@ -38,6 +38,8 @@ skin = function() {
           date = '<font color="#aaaaaa">' + date + '</font>';
         } else if((cal.date[i] == d) && (cal.month == m) && (cal.year == y)) {
           date = '<div id="today">' + date + '</div>';
+        } else if((cal.holidays != null) && cal.holidays[i]) {
+          date = '<font color="#ff0000">' + date + '</font>';
         } else if(i % 7 == sunday) {
           date = '<font color="#ff0000">' + date + '</font>';
         } else if(i % 7 == saturday) {

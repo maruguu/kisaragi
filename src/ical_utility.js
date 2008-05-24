@@ -12,25 +12,27 @@ var iCalUtility = function() {
   var checkInterval = function(date, freq, interval, sDate) {
     var startDate = new Date(sDate);
     var i = 0;
-    while(date >= startDate) {
-      if(freq == 'YEARLY') {
+    if(freq == 'YEARLY') {
+      while(date.getFullYear() >= startDate.getFullYear()) {
         if(date.getFullYear() == startDate.getFullYear()) {
           return true;
         }
-        startDate.setFullYear(startDate.getFullYear() + 1);
-      } else if(freq == 'MONTHLY') {
+        startDate.setFullYear(startDate.getFullYear() + parseInt(interval));
+      }
+    } else if(freq == 'MONTHLY') {
+      while(date.getFullYear() >= startDate.getFullYear()) {
         if((date.getFullYear() == startDate.getFullYear()) &&
            (date.getMonth() == startDate.getMonth())) {
           return true;
         }
-        startDate.setMonth(startDate.getMonth() + 1);
-      } else if(freq == 'DAYLY') {
+        startDate.setMonth(startDate.getMonth() + parseInt(interval));
+      }
+    } else if(freq == 'DAYLY') {
+      while(date >= startDate) {
         if(checkDate(date, startDate)) {
           return true;
         }
-        startDate.setDate(startDate.getDate() + 1);
-      } else {
-        return false;
+        startDate.setDate(startDate.getDate() + parseInt(interval));
       }
     }
     return false;
@@ -76,7 +78,6 @@ var iCalUtility = function() {
     var m = RegExp.$2 - 1;
     var d = RegExp.$3;
     
-    $('calendar').innerHTML += value + ' -> ' + y + '/' + (m + 1) + '/'+ d + '<br />';
     if(((date.getFullYear() < y)) ||
        ((date.getFullYear() == y) && (date.getMonth() < m)) ||
        ((date.getFullYear() == y) && (date.getMonth() == m) && (date.getDate() <= d))) {
@@ -93,25 +94,23 @@ var iCalUtility = function() {
         var event = calendar.getEventAtIndex(i); 
         var startDate = event.getStartDate();
         var rules = event.getRuleProperties();
+        
         if(rules.size > 0) {
           // if VEVENT has RRULE section, check FREQ, INTERVAL...
           var freq = rules.getProperty('FREQ');
           var interval = 1;
           var result = false;
+          
           if(rules.containsKey('INTERVAL')) {
             interval = rules.getProperty('INTERVAL');
-            result = checkInterval(date, freq, interval, startDate);
-            if(!result) {
-              continue;
-            }
           } else {
-            // if INTERVAL is not defined, check only DTSTART
-            if(checkDate(date, startDate)) {
-              return true;
-            } else {
-              continue;
-            }
+            interval = 1;
           }
+          result = checkInterval(date, freq, interval, startDate);
+          if(!result) {
+            continue;
+          }
+          
           
           if(rules.containsKey('BYMONTH')) {
             if(!checkByMonth(date, rules.getProperty('BYMONTH'))) {

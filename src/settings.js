@@ -5,7 +5,7 @@ var settings = function(){
   menu[2] = 'バージョン';
   var pages = new Array();
   pages[0] = '<form><select id="skin_list" size="10" name="skin_list"><option value="default">default</option><option value="default_r">default_r</option><option value="default_g">default_g</option><option value="default_b">default_b</option><option value="flat_black">flat_black</option></select></form>';
-  pages[1] = '';
+  pages[1] = '<input type="checkbox" name="disp_holiday" value="" />祝日を表示する<br /><p>iCalデータのURL:<br><input type="text" id="ical_url" value="" class="input-box" /></p>';
   pages[2] = '<center><img src="images/icon.png" width="64px" height="64px"/><br /><b>kisaragi <div id="version"></div></b><br /><a href="http://code.google.com/p/kisaragi/" target="_blank">http://code.google.com/p/kisaragi/</a><br /><input type="checkbox" name="check_ver" value="" />起動時に最新版を確認する</center></center>';
   
   var current_page = 0;
@@ -37,6 +37,8 @@ var settings = function(){
           }
         });
       } else if(page == 1) {
+        kisaragi.setHolidayCheck($('disp_holiday').checked);
+        kisaragi.setiCalUrl($('ical_url').value);
       } else if(page == 2) {
         kisaragi.setVersionCheck($('check_ver').checked);
       }
@@ -74,6 +76,8 @@ var settings = function(){
           }
         });
       } else if(page == 1) {
+        $('disp_holiday').checked = kisaragi.getHolidayCheck();
+        $('ical_url').value = kisaragi.getiCalUrl();
       } else if(page == 2) {
         $('check_ver').checked = kisaragi.getVersionCheck();
         $('version').innerHTML = 'Version ' + System.Gadget.version;
