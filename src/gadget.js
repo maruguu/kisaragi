@@ -70,6 +70,7 @@ var gadget = function() {
       if(kisaragi.getHolidayCheck()) {
         kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
       }
+      kisaragi.update_date();
     }
   };
 }();

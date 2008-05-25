@@ -11,6 +11,29 @@ var kisaragi = function() {
     this.date = new Array();
     this.holidays = null;
   };
+  // refresh
+  var today_cal; // render時に更新される
+  var dateTimer = null;
+  var refresh_date = function() {
+    if(dateTimer) {
+      clearTimeout(dateTimer);
+    }
+    var tod = new Date();
+    var y = tod.getFullYear();
+    var m = tod.getMonth();
+    
+    // 日付が変わったかどうかチェック
+    if((tod.getHours() == 0) && (tod.getMinutes() == 0)) {
+      if((cal.year == y) && (cal.month == m + 1)) {
+        kisaragi.render(kisaragi.getCalendar(tod, 0));
+        if(kisaragi.getHolidayCheck()) {
+          kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
+        }
+      }
+    }
+    var s = tod.getSeconds();
+    dateTimer = setTimeout(function() { refresh_date(); }, (60 - s) * 1000);
+  };
   
   // render function
   var lock = false;
@@ -22,6 +45,7 @@ var kisaragi = function() {
     
     if(!lock) {
       lock = true;
+      today_cal = cal;
       skin.render(cal);
       lock = false;
     } else {
@@ -100,7 +124,7 @@ var kisaragi = function() {
     },
     
     getCalendar: function(time, startDay) {
-      var tod = time || new Date;
+      var tod = time || new Date();
       startDay = startDay || 0;
       
       var y = tod.getFullYear();
@@ -235,6 +259,15 @@ var kisaragi = function() {
         clearTimeout(renderTimer);
       }
       renderTimer = setTimeout(function() { render_core(cal); }, 500);
+    },
+    
+    update_date: function() {
+      if(dateTimer) {
+        clearTimeout(dateTimer);
+      }
+      var tod = new Date();
+      var s = tod.getSeconds();
+      dateTimer = setTimeout(function() { refresh_date(); }, (60 - s) * 1000);
     }
   };
 }();
