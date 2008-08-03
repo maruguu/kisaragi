@@ -23,12 +23,10 @@ var kisaragi = function() {
     var m = tod.getMonth();
     
     // 日付が変わったかどうかチェック
-    if((tod.getHours() == 0) && (tod.getMinutes() == 0)) {
-      if((cal.year == y) && (cal.month == m + 1)) {
-        kisaragi.render(kisaragi.getCalendar(tod, 0));
-        if(kisaragi.getHolidayCheck()) {
-          kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
-        }
+    if((cal.year == y) && (cal.month == m + 1)) {
+      kisaragi.render(kisaragi.getCalendar(tod, 0));
+      if(kisaragi.getHolidayCheck()) {
+        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
       }
     }
     var s = tod.getSeconds();
