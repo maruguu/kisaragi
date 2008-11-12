@@ -23,11 +23,9 @@ var kisaragi = function() {
     var m = tod.getMonth();
     
     // 日付が変わったかどうかチェック
-    if((cal.year == y) && (cal.month == m + 1)) {
-      kisaragi.render(kisaragi.getCalendar(tod, 0));
-      if(kisaragi.getHolidayCheck()) {
-        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
-      }
+    kisaragi.render(kisaragi.getCalendar(tod, 0));
+    if(kisaragi.getHolidayCheck()) {
+      kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
     }
     var s = tod.getSeconds();
     dateTimer = setTimeout(function() { refresh_date(); }, (60 - s) * 1000);
