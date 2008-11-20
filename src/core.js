@@ -3,6 +3,7 @@ var kisaragi = function() {
     return year % 4 ? 0 : year % 100 ? 1 : year % 400 ? 0 : 1;
   };
   
+  // カレンダクラス
   var Calendar = function(){
     this.year = 2000;
     this.month = 1;
@@ -11,6 +12,7 @@ var kisaragi = function() {
     this.date = new Array();
     this.holidays = null;
   };
+  
   // refresh
   var today_cal; // render時に更新される
   var dateTimer = null;
@@ -19,13 +21,14 @@ var kisaragi = function() {
       clearTimeout(dateTimer);
     }
     var tod = new Date();
-    var y = tod.getFullYear();
-    var m = tod.getMonth();
+    var d = tod.getDate();
     
     // 日付が変わったかどうかチェック
-    kisaragi.render(kisaragi.getCalendar(tod, 0));
-    if(kisaragi.getHolidayCheck()) {
-      kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
+    if(today_cal.tod != d) {
+      kisaragi.render(kisaragi.getCalendar(tod, 0));
+      if(kisaragi.getHolidayCheck()) {
+        kisaragi.requestiCal(kisaragi.getiCalUrl(), kisaragi.setHolidays);
+      }
     }
     var s = tod.getSeconds();
     dateTimer = setTimeout(function() { refresh_date(); }, (60 - s) * 1000);
